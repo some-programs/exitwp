@@ -8,12 +8,6 @@ By default it will try to convert as much information as possible from wordpress
 
 The latest version of these docs should always be available at https://github.com/thomasf/exitwp
 
-Known issues
-============
- * Image/attachment downloading not implemented
- * This documentation page needs some polish
- * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist)
-
 Getting started
 ===============
  * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone https://thomasf@github.com/thomasf/exitwp.git``
@@ -43,12 +37,19 @@ from the checked out root for this project, type:
 
    pip install -e pip_requirements.txt
 
-   (NOTE: pip_requirements.txt not written yet)
+(NOTE: pip_requirements.txt not written yet)
 
 
  Configuration/Customization
-============================
+=============================
 
 See the `configuration file <https://github.com/thomasf/exitwp/blob/master/config.yaml>`_ for all configurable options.
 
 Some things like custom handling of non standard post types is not fully configurable through the config file. You might have to modify the `source code <https://github.com/thomasf/exitwp/blob/master/exitwp.py>`_ to add custom parsing behaviour.
+
+Known issues
+============
+ * Image/attachment downloading not implemented
+ * This documentation page needs some polish
+ * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist)
+
