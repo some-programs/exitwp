@@ -40,8 +40,8 @@ from the checked out root for this project, type:
 (NOTE: pip_requirements.txt not written yet)
 
 
- Configuration/Customization
-=============================
+Configuration/Customization
+===========================
 
 See the `configuration file <https://github.com/thomasf/exitwp/blob/master/config.yaml>`_ for all configurable options.
 
