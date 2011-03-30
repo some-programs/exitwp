@@ -46,6 +46,6 @@ from the checked out root for this project, type:
  Configuration
 =============
 
-See the `configuration file <config.yaml>`_ for all options.
+See the `configuration file <https://github.com/thomasf/exitwp/blob/config.yaml>`_ for all options.
 
-Some things like handling more post types isnt configuration file configurable atm. you might have to modify the `source code <exitwp.py>`_ to add additional parsing behaviour
+Some things like handling more post types isnt configuration file configurable atm. you might have to modify the `source code <https://github.com/thomasf/exitwp/blob/exitwp.py>`_ to add additional parsing behaviour
