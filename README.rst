@@ -2,11 +2,16 @@
 Exitwp
 ######
 
-Exitwp is tool primarily aimed for making migration from multiple wordpress blogs to the `jekyll blog engine <https://github.com/mojombo/jekyll/>`_ as easy as possible.
-
-This is a tool that aids batch conversions of wordpress blogs to use with the jekyll blog engine.
+Exitwp is tool for making migration from one or more wordpress blogs to the `jekyll blog engine <https://github.com/mojombo/jekyll/>`_ as easy as possible.
 
 By default it will try to convert as much information as possible from wordpress but can also be told to filter the amount of data it converts.
+
+
+Known issues
+============
+ * Image/attachment downloading not implemented
+ * This documentation page needs some polish
+ * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist)
 
 Getting started
 ===============
@@ -41,4 +46,6 @@ from the checked out root for this project, type:
  Configuration
 =============
 
-Check
+See the `configuration file <config.yaml>`_ for all options.
+
+Some things like handling more post types isnt configuration file configurable atm. you might have to modify the `source code <exitwp.py>`_ to add additional parsing behaviour
