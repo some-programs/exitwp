@@ -18,26 +18,32 @@ Getting started
 
 Runtime dependencies
 ====================
- * Python 2.6
- * Pandoc: document conversion from html to markdown and so on... (haskell)
- * PyYAML: Reading configuration files and writing YAML headers (python)
- * Beautiful soup: Parsing and downloading of post images/attachments (python)
+ * `Python <http://python.org/>`_ 2.6
+ * `Pandoc <http://johnmacfarlane.net/pandoc/>`_ :  document conversion from html to markdown and so on... (haskell)
+ * `PyYAML <http://pyyaml.org/wiki/PyYAML>`_ : Reading configuration files and writing YAML headers (python)
+ * `Beautiful soup <http://www.crummy.com/software/BeautifulSoup/>`_ : Parsing and downloading of post images/attachments (python)
 
-Installing python dependencies in ubuntu
-----------------------------------------
 
-   sudo apt-get install pandoc
+Installing non python dependencies in ubuntu/debian
+---------------------------------------------------
 
-   sudo apt-get install python-yaml python-beautifulsoup
+   ``sudo apt-get install pandoc``
 
-Installing using Using python package installer
+Installing python dependencies in ubuntu/debian
 -----------------------------------------------
 
-from the checked out root for this project, type:
+   ``sudo apt-get install python-yaml python-beautifulsoup``
 
-   pip install -e pip_requirements.txt
+Installing Python dependencies using python package installer (pip)
+-------------------------------------------------------------------
 
-(NOTE: pip_requirements.txt not written yet)
+From the checked out root for this project, type:
+
+   ``sudo pip install --upgrade  -r pip_requirements.txt``
+
+Note that PyYAML will require other packages to compile correctly under ubuntu/debian, these are installed by typing:
+
+   ``sudo apt-get install libyaml-dev python-dev build-essential``
 
 
 Configuration/Customization
@@ -50,10 +56,11 @@ Some things like custom handling of non standard post types is not fully configu
 Known issues
 ============
 Near future improvements:
- * Posts with the same name from the same date will result in overwritten post instead of rewriting with a different file name
- * Target file names are some times less than optimal
- * Image/attachment downloading not implemented
- * This documentation page needs some polish, especially the installation section
+ * Posts with the same name from the same date will result in overwritten post instead of rewriting with a different file name.
+ * Target file names are some times less than optimal.
+ * Image/attachment downloading not implemented.
+ * Meaningful translation/filtering of wikipedia publish statuses into something that usable within a fairly standard jekyll setup.
 
 Things that might be resolved later on if I find the time:
- * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist)
+ * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist).
+ * Integrate one or a few basic jekyll site templates to render complete working jekyll blog setups from wordpress exports.
