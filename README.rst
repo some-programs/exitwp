@@ -16,7 +16,7 @@ Known issues
 
 Getting started
 ===============
- * Check out or download the repository
+ * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone https://thomasf@github.com/thomasf/exitwp.git``
  * Export one or more wordpress blogs using the wordpress exporter under tools/export in wordpress admin.
  * Put all wordpress xml files in the wp-xml-export directory
  * Run the converter by typing 'python exitwp.py' in the console
@@ -39,9 +39,12 @@ Installing python dependencies in ubuntu
 Installing using Using python package installer
 -----------------------------------------------
 
+
 from the checked out root for this project, type:
 
    pip install -e pip_requirements.txt
+
+   (NOTE: pip_requirements.txt not written yet)
 
 
  Configuration
