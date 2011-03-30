@@ -49,7 +49,11 @@ Some things like custom handling of non standard post types is not fully configu
 
 Known issues
 ============
+Near future improvements:
+ * Posts with the same name from the same date will result in overwritten post instead of rewriting with a different file name
+ * Target file names are some times less than optimal
  * Image/attachment downloading not implemented
- * This documentation page needs some polish
- * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist)
+ * This documentation page needs some polish, especially the installation section
 
+Things that might be resolved later on if I find the time:
+ * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist)
