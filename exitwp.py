@@ -9,7 +9,7 @@ import re
 import sys
 import yaml
 import tempfile
-from BeautifulSoup import BeautifulSoup as bs
+from BeautifulSoup import BeautifulSoup
 
 
 '''
@@ -33,9 +33,11 @@ taxonomy_name_mapping = config['taxonomies']['name_mapping']
 item_type_filter = set(config['item_type_filter'])
 date_fmt=config['date_format']
 
+
+
 def html2fmt(html, target_format):
     target_format='markdown'
-    if (target_format=='html'):
+    if target_format=='html':
         return html
     else:
         # This is like very stupid but I was having troubles with unicode encodings and process.POpen
@@ -84,8 +86,8 @@ def parse_wp_xml(file):
             for tax in taxanomies:
                 t_domain=unicode(tax.attrib['domain'])
                 t_entry=unicode(tax.text)
-                if not (t_domain in taxonomy_filter) and not (taxonomy_entry_filter.has_key(t_domain) and taxonomy_entry_filter[t_domain]==t_entry):
-                    if not export_taxanomies.has_key(t_domain):
+                if not (t_domain in taxonomy_filter) and not (t_domain in taxonomy_entry_filter and taxonomy_entry_filter[t_domain]==t_entry):
+                    if not t_domain in export_taxanomies:
                             export_taxanomies[t_domain]=[]
                     export_taxanomies[t_domain].append(t_entry)
 
@@ -98,17 +100,32 @@ def parse_wp_xml(file):
                 if unicode_wrap: result=unicode(result)
                 return result
 
+            body=gi('content:encoded')
+
+            img_srcs=[]
+            if body is not None:
+                try:
+                    soup = BeautifulSoup(body)
+                    img_tags=soup.findAll('img')
+                    for img in img_tags:
+                        img_srcs.append(img['src'])
+                except:
+                    print "could not parse html for:" + body
+            #print img_srcs
+
             export_item = {
-                 'title' : gi('title'),
-                 'author' : gi('dc:creator'),
-                 'date' : gi('wp:post_date'),
-                 'slug' : gi('wp:post_name'),
-                 'status' : gi('wp:status'),
-                 'type' : gi('wp:post_type'),
-                 'wp_id' : gi('wp:post_id'),
-                 'taxanomies' : export_taxanomies,
-                 'body' : gi('content:encoded'),
-               }
+                'title' : gi('title'),
+                'author' : gi('dc:creator'),
+                'date' : gi('wp:post_date'),
+                'slug' : gi('wp:post_name'),
+                'status' : gi('wp:status'),
+                'type' : gi('wp:post_type'),
+                'wp_id' : gi('wp:post_id'),
+                'taxanomies' : export_taxanomies,
+                'body' : body,
+                'img_urls': img_srcs
+                }
+
             export_items.append(export_item)
 
         return export_items
@@ -141,8 +158,7 @@ def write_jekyll(data, target_format):
         f=codecs.open(file, 'w', encoding='utf-8')
         return f
 
-
-    def get_filename(item, date_prefix=False, dir=''):
+    def get_item_path(item, date_prefix=False, dir=''):
         full_dir=get_full_dir(dir)
         filename_parts=[full_dir,'/']
         if (date_prefix):
@@ -151,14 +167,18 @@ def write_jekyll(data, target_format):
             filename_parts.append('-')
 
         s_title=item['slug']
-        if not s_title or s_title == '': s_title=item['title']
-        if s_title == '': s_title='untitled'
+        print s_title
+        if s_title is None or s_title == '': s_title=item['title']
+        if s_title is None or s_title == '': s_title='untitled'
         s_title=s_title.replace(' ','_')
         s_title=re.sub('[^a-zA-Z0-9_-]','', s_title)
         filename_parts.append(s_title)
-        filename_parts.append('.')
-        filename_parts.append(target_format)
-        return ''.join(filename_parts)
+        fn=''.join(filename_parts)+'.'+target_format
+        n=1
+        while os.path.exists(fn):
+            n=n+1
+            fn=''.join(filename_parts)+'_'+str(n)+'.'+target_format
+        return fn
 
     for i in data['items']:
         sys.stdout.write(".")
@@ -174,10 +194,10 @@ def write_jekyll(data, target_format):
         }
 
         if i['type'] == 'post':
-            out=open_file(get_filename(i, date_prefix=True, dir='_posts'))
+            out=open_file(get_item_path(i, date_prefix=True, dir='_posts'))
             yaml_header['layout']='post'
         elif i['type'] == 'page':
-            out=open_file(get_filename(i))
+            out=open_file(get_item_path(i))
             yaml_header['layout']='page'
         elif i['type'] in item_type_filter:
             pass
@@ -201,6 +221,7 @@ def write_jekyll(data, target_format):
 
             out.write('---\n\n')
             out.write(html2fmt(i['body'], target_format))
+
             out.close()
     print "\n"
 

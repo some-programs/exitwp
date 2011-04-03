@@ -56,7 +56,6 @@ Some things like custom handling of non standard post types is not fully configu
 Known issues
 ============
 Near future improvements:
- * Posts with the same name from the same date will result in overwritten post instead of rewriting with a different file name.
  * Target file names are some times less than optimal.
  * Image/attachment downloading not implemented.
  * Meaningful translation/filtering of wikipedia publish statuses into something that usable within a fairly standard jekyll setup.
