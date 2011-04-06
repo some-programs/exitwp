@@ -10,14 +10,23 @@ import sys
 import yaml
 import tempfile
 from BeautifulSoup import BeautifulSoup
+from urlparse import urlparse
 
 
 '''
 Import
 
-Tested with Wordpress 3.1 and jekyll trunk 2011-03-26
-pandoc is required to be installed if conversion from
-html will be done.
+Tested with Wordpress 3.1 and jekyll master branch from 2011-03-26
+pandoc is required to be installed if conversion from html will be done.
+
+Havent really coded much python (yet) so the design of this code is a bit messy.
+
+EAFP:
+   I should do more EAFP to keep the code cleaner, it's even in the python manual glossary.
+
+Flat is better than nested:
+   I seem to nest loops a bit uncarefully, should take greater notice about this.
+
 '''
 ######################################################
 # Configration
@@ -32,8 +41,6 @@ taxonomy_entry_filter = config['taxonomies']['entry_filter']
 taxonomy_name_mapping = config['taxonomies']['name_mapping']
 item_type_filter = set(config['item_type_filter'])
 date_fmt=config['date_format']
-
-
 
 def html2fmt(html, target_format):
     target_format='markdown'
@@ -110,7 +117,7 @@ def parse_wp_xml(file):
                     for img in img_tags:
                         img_srcs.append(img['src'])
                 except:
-                    print "could not parse html for:" + body
+                    print "could not parse html: " + body
             #print img_srcs
 
             export_item = {
@@ -123,7 +130,7 @@ def parse_wp_xml(file):
                 'wp_id' : gi('wp:post_id'),
                 'taxanomies' : export_taxanomies,
                 'body' : body,
-                'img_urls': img_srcs
+                'img_srcs': img_srcs
                 }
 
             export_items.append(export_item)
@@ -139,6 +146,8 @@ def parse_wp_xml(file):
 def write_jekyll(data, target_format):
 
     sys.stdout.write("writing")
+    item_uids={}
+    attachments={}
 
     def get_blog_path(data, path_infix='jekyll'):
         name=data['header']['link']
@@ -158,27 +167,67 @@ def write_jekyll(data, target_format):
         f=codecs.open(file, 'w', encoding='utf-8')
         return f
 
-    def get_item_path(item, date_prefix=False, dir=''):
+    def get_item_uid(item, date_prefix=False, namespace=''):
+        result=None
+        if namespace not in item_uids:
+            item_uids[namespace]={}
+
+        if item['wp_id'] in item_uids[namespace]:
+            result=item_uids[namespace][item['wp_id']]
+        else:
+            uid=[]
+            if (date_prefix):
+                dt=datetime.strptime(item['date'],date_fmt)
+                uid.append(dt.strftime('%Y-%m-%d'))
+                uid.append('-')
+            s_title=item['slug']
+            if s_title is None or s_title == '': s_title=item['title']
+            if s_title is None or s_title == '': s_title='untitled'
+            s_title=s_title.replace(' ','_')
+            s_title=re.sub('[^a-zA-Z0-9_-]','', s_title)
+            uid.append(s_title)
+            fn=''.join(uid)
+            n=1
+            while fn in item_uids[namespace]:
+                n=n+1
+                fn=''.join(uid)+'_'+str(n)
+                item_uids[namespace][i['wp_id']]=fn
+            result=fn
+        return result
+
+    def get_item_path(item, date_prefix=False, dir='', namespace=''):
         full_dir=get_full_dir(dir)
         filename_parts=[full_dir,'/']
-        if (date_prefix):
-            dt=datetime.strptime(item['date'],date_fmt)
-            filename_parts.append(dt.strftime('%Y-%m-%d'))
-            filename_parts.append('-')
+        filename_parts.append(get_item_uid(item, date_prefix=date_prefix, namespace=namespace))
+        filename_parts.append('.')
+        filename_parts.append(target_format)
+        return ''.join(filename_parts)
 
-        s_title=item['slug']
-        print s_title
-        if s_title is None or s_title == '': s_title=item['title']
-        if s_title is None or s_title == '': s_title='untitled'
-        s_title=s_title.replace(' ','_')
-        s_title=re.sub('[^a-zA-Z0-9_-]','', s_title)
-        filename_parts.append(s_title)
-        fn=''.join(filename_parts)+'.'+target_format
-        n=1
-        while os.path.exists(fn):
-            n=n+1
-            fn=''.join(filename_parts)+'_'+str(n)+'.'+target_format
-        return fn
+    def get_attachment_path(src, dir, dir_prefix='a'):
+        try:
+            files=attachments[dir]
+        except KeyError:
+            attachments[dir]=files={}
+
+        try:
+            filename=files[src]
+        except KeyError:
+            file_root, file_ext=os.path.splitext(os.path.basename(urlparse(src)[2]))
+            file_infix=1
+            if file_root=='': file_root='1'
+            current_files=files.values()
+            maybe_filename=file_root+file_ext
+            while maybe_filename in current_files:
+                maybe_filename=file_root+'-'+str(file_infix)+file_ext
+                file_infix=file_infix+1
+            files[src]=filename=maybe_filename
+
+        target_name=os.path.normpath(blog_dir+'/'+dir_prefix +'/' + dir+'/'+filename)
+        #if src not in attachments[dir]:
+        print target_name
+        return target_name
+
+    #data['items']=[]
 
     for i in data['items']:
         sys.stdout.write(".")
@@ -194,15 +243,23 @@ def write_jekyll(data, target_format):
         }
 
         if i['type'] == 'post':
-            out=open_file(get_item_path(i, date_prefix=True, dir='_posts'))
+
+            fn=get_item_path(i, date_prefix=True, dir='_posts')
+            out=open_file(fn)
             yaml_header['layout']='post'
         elif i['type'] == 'page':
-            out=open_file(get_item_path(i))
+            fn=get_item_path(i)
+            out=open_file(fn)
             yaml_header['layout']='page'
         elif i['type'] in item_type_filter:
             pass
         else:
             print "Unknown item type :: " +  i['type']
+
+
+        for a in i['img_srcs']:
+            get_attachment_path(a,fn)
+
 
         if out is not None:
             def toyaml(data):
