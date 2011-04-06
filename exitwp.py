@@ -10,7 +10,8 @@ import sys
 import yaml
 import tempfile
 from BeautifulSoup import BeautifulSoup
-from urlparse import urlparse
+from urlparse import urlparse, urljoin
+from urllib import urlretrieve
 
 
 '''
@@ -195,10 +196,10 @@ def write_jekyll(data, target_format):
             result=fn
         return result
 
-    def get_item_path(item, date_prefix=False, dir='', namespace=''):
+    def get_item_path(item, dir=''):
         full_dir=get_full_dir(dir)
         filename_parts=[full_dir,'/']
-        filename_parts.append(get_item_uid(item, date_prefix=date_prefix, namespace=namespace))
+        filename_parts.append(item['uid'])
         filename_parts.append('.')
         filename_parts.append(target_format)
         return ''.join(filename_parts)
@@ -222,10 +223,15 @@ def write_jekyll(data, target_format):
                 file_infix=file_infix+1
             files[src]=filename=maybe_filename
 
-        target_name=os.path.normpath(blog_dir+'/'+dir_prefix +'/' + dir+'/'+filename)
+        target_dir=os.path.normpath(blog_dir+'/'+dir_prefix +'/' + dir)
+        target_file=os.path.normpath(target_dir+'/'+filename)
+
+        if (not os.path.exists(target_dir)):
+            os.makedirs(target_dir)
+
         #if src not in attachments[dir]:
-        print target_name
-        return target_name
+        ##print target_name
+        return target_file
 
     #data['items']=[]
 
@@ -243,11 +249,12 @@ def write_jekyll(data, target_format):
         }
 
         if i['type'] == 'post':
-
-            fn=get_item_path(i, date_prefix=True, dir='_posts')
+            i['uid']=get_item_uid(i,date_prefix=True)
+            fn=get_item_path(i, dir='_posts')
             out=open_file(fn)
             yaml_header['layout']='post'
         elif i['type'] == 'page':
+            i['uid']=get_item_uid(i)
             fn=get_item_path(i)
             out=open_file(fn)
             yaml_header['layout']='page'
@@ -257,8 +264,9 @@ def write_jekyll(data, target_format):
             print "Unknown item type :: " +  i['type']
 
 
-        for a in i['img_srcs']:
-            get_attachment_path(a,fn)
+        if download_images:
+            for img in i['img_srcs']:
+                urlretrieve(urljoin(data['header']['link'],img.decode('utf-8')), get_attachment_path(img, i['uid']))
 
 
         if out is not None:

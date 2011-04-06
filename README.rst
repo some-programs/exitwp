@@ -57,8 +57,12 @@ Known issues
 ============
 Near future improvements:
  * Target file names are some times less than optimal.
- * Image/attachment downloading not implemented.
+ * Rewriting of image/attachment links if they are downloaded
  * Meaningful translation/filtering of wikipedia publish statuses into something that usable within a fairly standard jekyll setup.
+
+Things I want to do to learn writing better python code:
+ * Refactor code to use less nesting
+ * Refactor code to use more try/except tests instead of if statements
 
 Things that might be resolved later on if I find the time:
  * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist).
