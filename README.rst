@@ -18,7 +18,7 @@ Getting started
 
 Runtime dependencies
 ====================
- * `Python <http://python.org/>`_ 2.6
+ * `Python <http://python.org/>`_ 2.6, 2.7, ???
  * `Pandoc <http://johnmacfarlane.net/pandoc/>`_ :  document conversion from html to markdown and so on... (haskell)
  * `PyYAML <http://pyyaml.org/wiki/PyYAML>`_ : Reading configuration files and writing YAML headers (python)
  * `Beautiful soup <http://www.crummy.com/software/BeautifulSoup/>`_ : Parsing and downloading of post images/attachments (python)
@@ -55,15 +55,7 @@ Some things like custom handling of non standard post types is not fully configu
 
 Known issues
 ============
-Near future improvements:
  * Target file names are some times less than optimal.
- * Rewriting of image/attachment links if they are downloaded
+ * Rewriting of image/attachment links if they are downloaded would be a good feature
  * Meaningful translation/filtering of wikipedia publish statuses into something that usable within a fairly standard jekyll setup.
-
-Things I want to do to learn writing better python code:
- * Refactor code to use less nesting
- * Refactor code to use more try/except tests instead of if statements
-
-Things that might be resolved later on if I find the time:
  * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist).
- * Integrate one or a few basic jekyll site templates to render complete working jekyll blog setups from wordpress exports.

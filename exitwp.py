@@ -13,20 +13,11 @@ from BeautifulSoup import BeautifulSoup
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
 
-
 '''
-Import
+exitwp - Wordpress xml exports to Jekykll blog format conversion
 
 Tested with Wordpress 3.1 and jekyll master branch from 2011-03-26
 pandoc is required to be installed if conversion from html will be done.
-
-Havent really coded much python (yet) so the design of this code is a bit messy.
-
-EAFP:
-   I should do more EAFP to keep the code cleaner, it's even in the python manual glossary.
-
-Flat is better than nested:
-   I seem to nest loops a bit uncarefully, should take greater notice about this.
 
 '''
 ######################################################
