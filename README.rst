@@ -10,7 +10,7 @@ The latest version of these docs should always be available at https://github.co
 
 Getting started
 ===============
- * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone https://github.com/thomasf/exitwp.git``
+ * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone git://github.com/thomasf/exitwp.git``
  * Export one or more wordpress blogs using the wordpress exporter under tools/export in wordpress admin.
  * Put all wordpress xml files in the ``wordpress-xml`` directory
  * Run the converter by typing ``python exitwp.py`` in the console from the directory of the unzipped archive
