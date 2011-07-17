@@ -32,6 +32,7 @@ taxonomy_filter = set(config['taxonomies']['filter'])
 taxonomy_entry_filter = config['taxonomies']['entry_filter']
 taxonomy_name_mapping = config['taxonomies']['name_mapping']
 item_type_filter = set(config['item_type_filter'])
+item_field_filter = config['item_field_filter']
 date_fmt=config['date_format']
 
 def html2fmt(html, target_format):
@@ -227,6 +228,17 @@ def write_jekyll(data, target_format):
     #data['items']=[]
 
     for i in data['items']:
+
+        skip_item = False
+
+        for field, value in item_field_filter.iteritems():
+            if(i[field] == value):
+                skip_item = True
+                break
+
+        if(skip_item):
+            continue
+
         sys.stdout.write(".")
         sys.stdout.flush()
         out=None
