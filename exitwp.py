@@ -56,11 +56,11 @@ def html2fmt(html, target_format):
 def parse_wp_xml(file):
     ns = {
         '':'', #this is the default namespace
-        'excerpt':"{http://wordpress.org/export/1.0/excerpt/}",
+        'excerpt':"{http://wordpress.org/export/1.1/excerpt/}",
         'content':"{http://purl.org/rss/1.0/modules/content/}",
         'wfw':"{http://wellformedweb.org/CommentAPI/}",
         'dc':"{http://purl.org/dc/elements/1.1/}",
-        'wp':"{http://wordpress.org/export/1.0/}"
+        'wp':"{http://wordpress.org/export/1.1/}"
     }
 
     tree=ElementTree()
