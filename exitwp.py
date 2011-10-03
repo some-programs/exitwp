@@ -84,7 +84,7 @@ def parse_wp_xml(file):
             taxanomies=i.findall('category')
             export_taxanomies={}
             for tax in taxanomies:
-                t_domain=unicode(tax.attrib['domain'])
+                t_domain=unicode(tax.attrib['domain'] if "domain" in tax else "")
                 t_entry=unicode(tax.text)
                 if not (t_domain in taxonomy_filter) and not (t_domain in taxonomy_entry_filter and taxonomy_entry_filter[t_domain]==t_entry):
                     if not t_domain in export_taxanomies:
