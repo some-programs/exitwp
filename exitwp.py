@@ -37,6 +37,7 @@ item_field_filter = config['item_field_filter']
 date_fmt=config['date_format']
 
 def html2fmt(html, target_format):
+    html = html.replace("\n\n", '<br>')
     if target_format=='html':
         return html
     else:
