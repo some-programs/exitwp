@@ -281,6 +281,7 @@ def write_jekyll(data, target_format):
                 for tvalue in i['taxanomies'][taxonomy]:
                     t_name=taxonomy_name_mapping.get(taxonomy,taxonomy)
                     if t_name not in tax_out: tax_out[t_name]=[]
+                    if tvalue in tax_out[t_name]: continue
                     tax_out[t_name].append(tvalue)
 
             out.write('---\n')
