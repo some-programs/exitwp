@@ -12,6 +12,7 @@ import tempfile
 from BeautifulSoup import BeautifulSoup
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
+from html2text import html2text
 
 '''
 exitwp - Wordpress xml exports to Jekykll blog format conversion
@@ -36,21 +37,12 @@ item_field_filter = config['item_field_filter']
 date_fmt=config['date_format']
 
 def html2fmt(html, target_format):
+    html = html.replace("\n\n", '<br>')
     if target_format=='html':
         return html
     else:
         # This is like very stupid but I was having troubles with unicode encodings and process.POpen
-        f=codecs.open('pandoc.in', 'w', encoding='utf-8')
-        f.write(html)
-        f.close()
-        call(["pandoc","-f","html","-o", "pandoc.out", "-t",target_format, "pandoc.in"])
-        f=codecs.open('pandoc.out', 'r', encoding='utf-8')
-        lines=[]
-        for line in f: lines.append(line)
-        f.close()
-        os.remove('pandoc.in')
-        os.remove('pandoc.out')
-        return ''.join(lines)
+        return html2text(html, '')
 
 def parse_wp_xml(file):
     ns = {
