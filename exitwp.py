@@ -75,7 +75,8 @@ def parse_wp_xml(file):
             taxanomies=i.findall('category')
             export_taxanomies={}
             for tax in taxanomies:
-                t_domain=unicode(tax.attrib['domain'] if "domain" in tax else "")
+                if not "domain" in tax.attrib: continue
+                t_domain=unicode(tax.attrib['domain'])
                 t_entry=unicode(tax.text)
                 if not (t_domain in taxonomy_filter) and not (t_domain in taxonomy_entry_filter and taxonomy_entry_filter[t_domain]==t_entry):
                     if not t_domain in export_taxanomies:
@@ -272,6 +273,7 @@ def write_jekyll(data, target_format):
                 for tvalue in i['taxanomies'][taxonomy]:
                     t_name=taxonomy_name_mapping.get(taxonomy,taxonomy)
                     if t_name not in tax_out: tax_out[t_name]=[]
+                    if tvalue in tax_out[t_name]: continue
                     tax_out[t_name].append(tvalue)
 
             out.write('---\n')
