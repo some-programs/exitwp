@@ -261,7 +261,11 @@ def write_jekyll(data, target_format):
 
         if download_images:
             for img in i['img_srcs']:
-                urlretrieve(urljoin(data['header']['link'],img.decode('utf-8')), get_attachment_path(img, i['uid']))
+                try:
+                    urlretrieve(urljoin(data['header']['link'],img.decode('utf-8')), get_attachment_path(img, i['uid']))
+                except:
+                    print "\n unable to download "+urljoin(data['header']['link'],img.decode('utf-8'))
+
 
 
         if out is not None:
