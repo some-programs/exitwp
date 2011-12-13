@@ -12,7 +12,7 @@ import tempfile
 from BeautifulSoup import BeautifulSoup
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
-from html2text import html2text
+from html2text import html2text_file
 
 '''
 exitwp - Wordpress xml exports to Jekykll blog format conversion
@@ -37,12 +37,14 @@ item_field_filter = config['item_field_filter']
 date_fmt=config['date_format']
 
 def html2fmt(html, target_format):
-    html = html.replace("\n\n", '<br>')
+#    html = html.replace("\n\n", '<br/><br/>')
+ #   html = html.replace('<pre lang="xml">', '<pre lang="xml"><![CDATA[')
+ #   html = html.replace('</pre>', ']]></pre>')
     if target_format=='html':
         return html
     else:
         # This is like very stupid but I was having troubles with unicode encodings and process.POpen
-        return html2text(html, '')
+        return html2text_file(html, None)
 
 def parse_wp_xml(file):
     ns = {
@@ -107,7 +109,6 @@ def parse_wp_xml(file):
 
             export_item = {
                 'title' : gi('title'),
-                'author' : gi('dc:creator'),
                 'date' : gi('wp:post_date'),
                 'slug' : gi('wp:post_name'),
                 'status' : gi('wp:status'),
@@ -237,7 +238,6 @@ def write_jekyll(data, target_format):
         yaml_header = {
           'title' : i['title'],
           'date' : i['date'],
-          'author' : i['author'],
           'slug' : i['slug'],
           'status' : i['status'],
           'wordpress_id' : i['wp_id'],
@@ -285,7 +285,10 @@ def write_jekyll(data, target_format):
             if len(tax_out)>0: out.write(toyaml(tax_out))
 
             out.write('---\n\n')
-            out.write(html2fmt(i['body'], target_format))
+            try:
+                out.write(html2fmt(i['body'], target_format))
+            except:
+                print "\n Parse error on: "+i['title']
 
             out.close()
     print "\n"
