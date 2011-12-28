@@ -19,20 +19,15 @@ Getting started
 Runtime dependencies
 ====================
  * `Python <http://python.org/>`_ 2.6, 2.7, ???
- * `Pandoc <http://johnmacfarlane.net/pandoc/>`_ :  document conversion from html to markdown and so on... (haskell)
+ * `html2text <http://www.aaronsw.com/2002/html2text/>`_ :  converts HTML to markdown (python)
  * `PyYAML <http://pyyaml.org/wiki/PyYAML>`_ : Reading configuration files and writing YAML headers (python)
  * `Beautiful soup <http://www.crummy.com/software/BeautifulSoup/>`_ : Parsing and downloading of post images/attachments (python)
 
 
-Installing non python dependencies in ubuntu/debian
----------------------------------------------------
+Installing dependencies in ubuntu/debian
+----------------------------------------
 
-   ``sudo apt-get install pandoc``
-
-Installing python dependencies in ubuntu/debian
------------------------------------------------
-
-   ``sudo apt-get install python-yaml python-beautifulsoup``
+   ``sudo apt-get install python-yaml python-beautifulsoup python-html2text``
 
 Installing Python dependencies using python package installer (pip)
 -------------------------------------------------------------------
