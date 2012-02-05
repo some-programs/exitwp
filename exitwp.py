@@ -115,6 +115,7 @@ def parse_wp_xml(file):
                 'status' : gi('wp:status'),
                 'type' : gi('wp:post_type'),
                 'wp_id' : gi('wp:post_id'),
+                'parent' : gi('wp:post_parent'),
                 'taxanomies' : export_taxanomies,
                 'body' : body,
                 'img_srcs': img_srcs
@@ -186,6 +187,10 @@ def write_jekyll(data, target_format):
         full_dir=get_full_dir(dir)
         filename_parts=[full_dir,'/']
         filename_parts.append(item['uid'])
+        if item['type'] == 'page':
+            if (not os.path.exists(''.join(filename_parts))):
+                os.makedirs(''.join(filename_parts))
+            filename_parts.append('/index')
         filename_parts.append('.')
         filename_parts.append(target_format)
         return ''.join(filename_parts)
@@ -251,7 +256,16 @@ def write_jekyll(data, target_format):
             yaml_header['layout']='post'
         elif i['type'] == 'page':
             i['uid']=get_item_uid(i)
-            fn=get_item_path(i)
+            # Chase down parent path, if any
+            parentpath = ''
+            item = i
+            while item['parent'] != "0":
+                item=next((parent for parent in data['items'] if parent['wp_id'] == item['parent']), None)
+                if item:
+                    parentpath = get_item_uid(item) + "/" + parentpath
+                else:
+                    break
+            fn=get_item_path(i, parentpath)
             out=open_file(fn)
             yaml_header['layout']='page'
         elif i['type'] in item_type_filter:
