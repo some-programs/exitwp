@@ -10,7 +10,7 @@ The latest version of these docs should always be available at https://github.co
 
 Getting started
 ===============
- * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone git://github.com/thomasf/exitwp.git``
+ * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone https://github.com/thomasf/exitwp``
  * Export one or more wordpress blogs using the wordpress exporter under tools/export in wordpress admin.
  * Put all wordpress xml files in the ``wordpress-xml`` directory
  * Special note for Wordpress 3.1, you need to add a missing namespace in rss tag : ``xmlns:atom="http://www.w3.org/2005/Atom"``
