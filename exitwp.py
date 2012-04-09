@@ -52,9 +52,6 @@ def html2fmt(html, target_format):
     if target_format == 'html':
         return html
     else:
-        # This is probably a stupid solution.
-        # but I was having troubles with character encodings
-        # and process.POpen.
         return html2text_file(html, None)
 
 
