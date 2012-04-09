@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from xml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import ElementTree, XMLTreeBuilder
 from subprocess import call, PIPE, Popen
 import os, codecs
 from datetime import datetime
@@ -17,7 +17,7 @@ from html2text import html2text_file
 '''
 exitwp - Wordpress xml exports to Jekykll blog format conversion
 
-Tested with Wordpress 3.1 and jekyll master branch from 2011-03-26
+Tested with Wordpress 3.3.1 and jekyll master branch from 2011-03-26
 pandoc is required to be installed if conversion from html will be done.
 
 '''
@@ -36,6 +36,16 @@ item_type_filter = set(config['item_type_filter'])
 item_field_filter = config['item_field_filter']
 date_fmt=config['date_format']
 
+class ns_tracker_tree_builder(XMLTreeBuilder):
+    def __init__(self):
+        XMLTreeBuilder.__init__(self)
+        self._parser.StartNamespaceDeclHandler=self._start_ns
+        self.namespaces={}
+ 
+    def _start_ns(self, prefix, ns):
+        self.namespaces[prefix]='{' + ns + '}'
+
+
 def html2fmt(html, target_format):
 #    html = html.replace("\n\n", '<br/><br/>')
  #   html = html.replace('<pre lang="xml">', '<pre lang="xml"><![CDATA[')
@@ -47,21 +57,17 @@ def html2fmt(html, target_format):
         return html2text_file(html, None)
 
 def parse_wp_xml(file):
-    ns = {
-        '':'', #this is the default namespace
-        'excerpt':"{http://wordpress.org/export/1.1/excerpt/}",
-        'content':"{http://purl.org/rss/1.0/modules/content/}",
-        'wfw':"{http://wellformedweb.org/CommentAPI/}",
-        'dc':"{http://purl.org/dc/elements/1.1/}",
-        'wp':"{http://wordpress.org/export/1.2/}",
-        'atom':"{http://www.w3.org/2005/Atom}"
-    }
 
+    parser=ns_tracker_tree_builder()
     tree=ElementTree()
 
     print "reading: " + wpe
 
-    root=tree.parse(file)
+    root=tree.parse(file, parser)
+    
+    ns=parser.namespaces
+    ns['']=''
+    
     c=root.find('channel')
 
     def parse_header():
