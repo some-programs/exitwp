@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from xml.etree.ElementTree import ElementTree, XMLTreeBuilder
-from subprocess import call, PIPE, Popen
 import os
 import codecs
 from datetime import datetime
@@ -9,7 +8,6 @@ from glob import glob
 import re
 import sys
 import yaml
-import tempfile
 from BeautifulSoup import BeautifulSoup
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
