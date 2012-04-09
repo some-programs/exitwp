@@ -17,8 +17,7 @@ from html2text import html2text_file
 '''
 exitwp - Wordpress xml exports to Jekykll blog format conversion
 
-Tested with Wordpress 3.3.1 and jekyll master branch from 2011-03-26
-pandoc is required to be installed if conversion from html will be done.
+Tested with Wordpress 3.3.1 and jekyll 0.11.2
 
 '''
 ######################################################
@@ -41,33 +40,30 @@ class ns_tracker_tree_builder(XMLTreeBuilder):
         XMLTreeBuilder.__init__(self)
         self._parser.StartNamespaceDeclHandler=self._start_ns
         self.namespaces={}
- 
+
     def _start_ns(self, prefix, ns):
         self.namespaces[prefix]='{' + ns + '}'
 
-
 def html2fmt(html, target_format):
-#    html = html.replace("\n\n", '<br/><br/>')
- #   html = html.replace('<pre lang="xml">', '<pre lang="xml"><![CDATA[')
- #   html = html.replace('</pre>', ']]></pre>')
+    #   html = html.replace("\n\n", '<br/><br/>')
+    #   html = html.replace('<pre lang="xml">', '<pre lang="xml"><![CDATA[')
+    #   html = html.replace('</pre>', ']]></pre>')
     if target_format=='html':
         return html
     else:
-        # This is like very stupid but I was having troubles with unicode encodings and process.POpen
+        # This is probably a stupid solution.
+        # but I was having troubles with character encodings
+        # and process.POpen.
         return html2text_file(html, None)
 
 def parse_wp_xml(file):
-
     parser=ns_tracker_tree_builder()
     tree=ElementTree()
-
     print "reading: " + wpe
-
     root=tree.parse(file, parser)
-    
     ns=parser.namespaces
     ns['']=''
-    
+
     c=root.find('channel')
 
     def parse_header():
@@ -87,7 +83,9 @@ def parse_wp_xml(file):
                 if not "domain" in tax.attrib: continue
                 t_domain=unicode(tax.attrib['domain'])
                 t_entry=unicode(tax.text)
-                if not (t_domain in taxonomy_filter) and not (t_domain in taxonomy_entry_filter and taxonomy_entry_filter[t_domain]==t_entry):
+                if (not (t_domain in taxonomy_filter) and
+                       not (t_domain in taxonomy_entry_filter and
+                       taxonomy_entry_filter[t_domain]==t_entry)):
                     if not t_domain in export_taxanomies:
                             export_taxanomies[t_domain]=[]
                     export_taxanomies[t_domain].append(t_entry)
@@ -135,7 +133,6 @@ def parse_wp_xml(file):
         'header': parse_header(),
         'items': parse_items(),
     }
-
 
 def write_jekyll(data, target_format):
 
@@ -233,7 +230,6 @@ def write_jekyll(data, target_format):
     #data['items']=[]
 
     for i in data['items']:
-
         skip_item = False
 
         for field, value in item_field_filter.iteritems():
@@ -279,15 +275,12 @@ def write_jekyll(data, target_format):
         else:
             print "Unknown item type :: " +  i['type']
 
-
         if download_images:
             for img in i['img_srcs']:
                 try:
-                    urlretrieve(urljoin(data['header']['link'],img.decode('utf-8')), get_attachment_path(img, i['uid']))
+                    urlretrieve(urljoin(data['header']['link'], img.decode('utf-8')), get_attachment_path(img, i['uid']))
                 except:
-                    print "\n unable to download "+urljoin(data['header']['link'],img.decode('utf-8'))
-
-
+                    print "\n unable to download " + urljoin(data['header']['link'], img.decode('utf-8'))
 
         if out is not None:
             def toyaml(data):
@@ -313,7 +306,6 @@ def write_jekyll(data, target_format):
 
             out.close()
     print "\n"
-
 
 wp_exports=glob(wp_exports+'/*.xml')
 for wpe in wp_exports:
