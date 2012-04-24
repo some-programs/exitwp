@@ -9,6 +9,9 @@ import re
 import sys
 import yaml
 from BeautifulSoup import BeautifulSoup
+import html5lib
+from html5lib import sanitizer
+from html5lib import treebuilders
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
 from html2text import html2text
@@ -313,7 +316,11 @@ def write_jekyll(data, target_format):
 
             out.write('---\n\n')
             try:
-                out.write(html2fmt(i['body'], target_format))
+                # See: http://stackoverflow.com/a/9232766/17339
+                parser = html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("beautifulsoup"), tokenizer=sanitizer.HTMLSanitizer)
+                html5lib_object = parser.parse(i['body'], encoding="utf-8")
+                html_string = unicode(str(html5lib_object), "utf-8")
+                out.write(html2fmt(html_string, target_format))
             except:
                 print "\n Parse error on: " + i['title']
 
