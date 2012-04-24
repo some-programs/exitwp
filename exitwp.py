@@ -117,6 +117,7 @@ def parse_wp_xml(file):
 
             export_item = {
                 'title': gi('title'),
+                'author': gi('dc:creator'),
                 'date': gi('wp:post_date'),
                 'slug': gi('wp:post_name'),
                 'status': gi('wp:status'),
@@ -250,6 +251,7 @@ def write_jekyll(data, target_format):
         out = None
         yaml_header = {
           'title': i['title'],
+          'author': i['author'],
           'date': i['date'],
           'slug': i['slug'],
           'status': i['status'],
