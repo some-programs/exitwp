@@ -11,7 +11,7 @@ import yaml
 from BeautifulSoup import BeautifulSoup
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
-from html2text import html2text_file
+from html2text import html2text
 
 '''
 exitwp - Wordpress xml exports to Jekykll blog format conversion
@@ -52,7 +52,7 @@ def html2fmt(html, target_format):
     if target_format == 'html':
         return html
     else:
-        return html2text_file(html, None)
+        return html2text(html, None)
 
 
 def parse_wp_xml(file):
