@@ -9,9 +9,12 @@ import re
 import sys
 import yaml
 from BeautifulSoup import BeautifulSoup
+import html5lib
+from html5lib import sanitizer
+from html5lib import treebuilders
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
-from html2text import html2text_file
+from html2text import html2text
 
 '''
 exitwp - Wordpress xml exports to Jekykll blog format conversion
@@ -52,7 +55,7 @@ def html2fmt(html, target_format):
     if target_format == 'html':
         return html
     else:
-        return html2text_file(html, None)
+        return html2text(html, None)
 
 
 def parse_wp_xml(file):
@@ -121,6 +124,7 @@ def parse_wp_xml(file):
 
             export_item = {
                 'title': gi('title'),
+                'author': gi('dc:creator'),
                 'date': gi('wp:post_date'),
                 'slug': gi('wp:post_name'),
                 'status': gi('wp:status'),
@@ -254,6 +258,7 @@ def write_jekyll(data, target_format):
         out = None
         yaml_header = {
           'title': i['title'],
+          'author': i['author'],
           'date': i['date'],
           'slug': i['slug'],
           'status': i['status'],
@@ -315,7 +320,11 @@ def write_jekyll(data, target_format):
 
             out.write('---\n\n')
             try:
-                out.write(html2fmt(i['body'], target_format))
+                # See: http://stackoverflow.com/a/9232766/17339
+                parser = html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("beautifulsoup"), tokenizer=sanitizer.HTMLSanitizer)
+                html5lib_object = parser.parse(i['body'], encoding="utf-8")
+                html_string = unicode(str(html5lib_object), "utf-8")
+                out.write(html2fmt(html_string, target_format))
             except:
                 print "\n Parse error on: " + i['title']
 
