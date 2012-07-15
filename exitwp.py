@@ -83,11 +83,9 @@ def parse_wp_xml(file):
                     continue
                 t_domain = unicode(tax.attrib['domain'])
                 t_entry = unicode(tax.text)
-                if (not (t_domain in taxonomy_filter) and
-                       not (t_domain in taxonomy_entry_filter and
-                       taxonomy_entry_filter[t_domain] == t_entry)):
+                if (not (t_domain in taxonomy_filter) and not (t_domain in taxonomy_entry_filter and taxonomy_entry_filter[t_domain] == t_entry)):
                     if not t_domain in export_taxanomies:
-                            export_taxanomies[t_domain] = []
+                        export_taxanomies[t_domain] = []
                     export_taxanomies[t_domain].append(t_entry)
 
             def gi(q, unicode_wrap=True):
