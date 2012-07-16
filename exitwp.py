@@ -33,6 +33,7 @@ taxonomy_name_mapping = config['taxonomies']['name_mapping']
 item_type_filter = set(config['item_type_filter'])
 item_field_filter = config['item_field_filter']
 date_fmt = config['date_format']
+body_replace = config['body_replace']
 
 
 class ns_tracker_tree_builder(XMLTreeBuilder):
@@ -105,6 +106,8 @@ def parse_wp_xml(file):
                 return result
 
             body = gi('content:encoded')
+            for key in body_replace:
+                body = body.replace(key, body_replace[key])
 
             img_srcs = []
             if body is not None:
