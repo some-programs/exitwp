@@ -30,3 +30,9 @@ taxonomies:
   # Rename taxonomies when writing jekyll output format.
   name_mapping: {category: categories, post_tag: tags}
 
+# Replace certain patterns in body
+# Simply replace the key with its value
+body_replace: {
+#    '[python]': '{% codeblock lang:python%}',
+#    '[/python]': '{% endcodeblock %}',
+}
