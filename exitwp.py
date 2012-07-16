@@ -34,9 +34,7 @@ item_type_filter = set(config['item_type_filter'])
 item_field_filter = config['item_field_filter']
 date_fmt = config['date_format']
 body_replace = config['body_replace']
-for key in body_replace:
-    print key, body_replace[key]
-raw_input()
+
 
 class ns_tracker_tree_builder(XMLTreeBuilder):
     def __init__(self):
