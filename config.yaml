@@ -33,6 +33,6 @@ taxonomies:
 # Replace certain patterns in body
 # Simply replace the key with its value
 body_replace: {
-#    '[python]': '{% codeblock lang:python%}',
+#    '[python]': '{% codeblock lang:python %}',
 #    '[/python]': '{% endcodeblock %}',
 }
