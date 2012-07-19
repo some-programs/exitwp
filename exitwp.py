@@ -109,7 +109,6 @@ def parse_wp_xml(file):
             for key in body_replace:
                 body = body.replace(key, body_replace[key])
 
-
             img_srcs = []
             if body is not None:
                 try:
