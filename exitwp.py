@@ -257,9 +257,10 @@ def write_jekyll(data, target_format):
           'title': i['title'],
           'date': i['date'],
           'slug': i['slug'],
-          'status': i['status'],
           'wordpress_id': i['wp_id'],
         }
+        if i['status'] != u'publish':
+            yaml_header['published'] = False
 
         if i['type'] == 'post':
             i['uid'] = get_item_uid(i, date_prefix=True)
