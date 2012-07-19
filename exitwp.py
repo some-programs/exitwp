@@ -128,10 +128,11 @@ def parse_wp_xml(file):
                 'type': gi('wp:post_type'),
                 'wp_id': gi('wp:post_id'),
                 'parent': gi('wp:post_parent'),
+                'comments': gi('wp:comment_status') == u'open',
                 'taxanomies': export_taxanomies,
                 'body': body,
                 'img_srcs': img_srcs
-                }
+            }
 
             export_items.append(export_item)
 
@@ -254,10 +255,11 @@ def write_jekyll(data, target_format):
         sys.stdout.flush()
         out = None
         yaml_header = {
-          'title': i['title'],
-          'date': datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S'),
-          'slug': i['slug'],
-          'wordpress_id': int(i['wp_id']),
+            'title': i['title'],
+            'date': datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S'),
+            'slug': i['slug'],
+            'wordpress_id': int(i['wp_id']),
+            'comments': i['comments'],
         }
         if i['status'] != u'publish':
             yaml_header['published'] = False
@@ -291,7 +293,7 @@ def write_jekyll(data, target_format):
                 try:
                     urlretrieve(urljoin(data['header']['link'],
                                         img.decode('utf-8')),
-                                        get_attachment_path(img, i['uid']))
+                                get_attachment_path(img, i['uid']))
                 except:
                     print "\n unable to download " + urljoin(data['header']['link'], img.decode('utf-8'))
 
