@@ -109,6 +109,7 @@ def parse_wp_xml(file):
             for key in body_replace:
                 body = body.replace(key, body_replace[key])
 
+
             img_srcs = []
             if body is not None:
                 try:
@@ -128,6 +129,7 @@ def parse_wp_xml(file):
                 'type': gi('wp:post_type'),
                 'wp_id': gi('wp:post_id'),
                 'parent': gi('wp:post_parent'),
+                'comments': gi('wp:comment_status') == u'open',
                 'taxanomies': export_taxanomies,
                 'body': body,
                 'img_srcs': img_srcs
@@ -259,6 +261,7 @@ def write_jekyll(data, target_format):
           'slug': i['slug'],
           'status': i['status'],
           'wordpress_id': i['wp_id'],
+          'comments': i['comments'],
         }
 
         if i['type'] == 'post':
