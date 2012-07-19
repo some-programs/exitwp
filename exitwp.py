@@ -255,11 +255,12 @@ def write_jekyll(data, target_format):
         out = None
         yaml_header = {
           'title': i['title'],
-          'date': i['date'],
+          'date': datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S'),
           'slug': i['slug'],
-          'status': i['status'],
-          'wordpress_id': i['wp_id'],
+          'wordpress_id': int(i['wp_id']),
         }
+        if i['status'] != u'publish':
+            yaml_header['published'] = False
 
         if i['type'] == 'post':
             i['uid'] = get_item_uid(i, date_prefix=True)
