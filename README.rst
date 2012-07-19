@@ -54,7 +54,6 @@ Known issues
 ============
  * Target file names are some times less than optimal.
  * Rewriting of image/attachment links if they are downloaded would be a good feature
- * Meaningful translation/filtering of wikipedia publish statuses into something that usable within a fairly standard jekyll setup.
  * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist).
 
 Other Tools
