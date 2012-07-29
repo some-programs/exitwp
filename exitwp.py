@@ -8,7 +8,7 @@ from glob import glob
 import re
 import sys
 import yaml
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
 from html2text import html2text_file
@@ -113,7 +113,7 @@ def parse_wp_xml(file):
             if body is not None:
                 try:
                     soup = BeautifulSoup(body)
-                    img_tags = soup.findAll('img')
+                    img_tags = soup.find_all('img')
                     for img in img_tags:
                         img_srcs.append(img['src'])
                 except:
