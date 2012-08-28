@@ -1,1 +1,1 @@
-[ $(type -t workon) == "function" ] && workon exitwp
+[ "$(type -t workon)" = "function" ] && workon exitwp
