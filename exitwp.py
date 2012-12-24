@@ -107,7 +107,8 @@ def parse_wp_xml(file):
 
             body = gi('content:encoded')
             for key in body_replace:
-                body = body.replace(key, body_replace[key])
+                # body = body.replace(key, body_replace[key])
+                body = re.sub(key, body_replace[key], body)
 
             img_srcs = []
             if body is not None:
@@ -292,10 +293,10 @@ def write_jekyll(data, target_format):
             for img in i['img_srcs']:
                 try:
                     urlretrieve(urljoin(data['header']['link'],
-                                        img.decode('utf-8')),
+                                        img.encode('utf-8')),
                                 get_attachment_path(img, i['uid']))
                 except:
-                    print "\n unable to download " + urljoin(data['header']['link'], img.decode('utf-8'))
+                    print "\n unable to download " + urljoin(data['header']['link'], img.encode('utf-8'))
 
         if out is not None:
             def toyaml(data):
