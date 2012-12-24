@@ -107,7 +107,8 @@ def parse_wp_xml(file):
 
             body = gi('content:encoded')
             for key in body_replace:
-                body = body.replace(key, body_replace[key])
+                # body = body.replace(key, body_replace[key])
+                body = re.sub(key, body_replace[key], body)
 
             img_srcs = []
             if body is not None:
