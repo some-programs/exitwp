@@ -293,10 +293,10 @@ def write_jekyll(data, target_format):
             for img in i['img_srcs']:
                 try:
                     urlretrieve(urljoin(data['header']['link'],
-                                        img.decode('utf-8')),
+                                        img.encode('utf-8')),
                                 get_attachment_path(img, i['uid']))
                 except:
-                    print "\n unable to download " + urljoin(data['header']['link'], img.decode('utf-8'))
+                    print "\n unable to download " + urljoin(data['header']['link'], img.encode('utf-8'))
 
         if out is not None:
             def toyaml(data):
