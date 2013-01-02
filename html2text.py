@@ -339,7 +339,11 @@ class _html2text(HTMLParser.HTMLParser):
     def drop_last(self, nLetters):
         if not self.quiet:
             self.outtext = self.outtext[:-nLetters]
-           
+
+    def handle_comment(self, data):
+        if data == "more":
+            self.o("<!-- more -->")
+            
     def handle_emphasis(self, start, tag_style, parent_style):
         """handles various text emphases"""
         tag_emphasis = google_text_emphasis(tag_style)
