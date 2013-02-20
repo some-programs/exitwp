@@ -8,15 +8,9 @@ By default it will try to convert as much information as possible from wordpress
 
 The latest version of these docs should always be available at https://github.com/thomasf/exitwp
 
-Getting started
-===============
- * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone https://github.com/thomasf/exitwp``
- * Export one or more wordpress blogs using the wordpress exporter under tools/export in wordpress admin.
- * Put all wordpress xml files in the ``wordpress-xml`` directory
- * Special note for Wordpress 3.1, you need to add a missing namespace in rss tag : ``xmlns:atom="http://www.w3.org/2005/Atom"``
- * Run xmllint on your export file and fix errors if there are.
- * Run the converter by typing ``python exitwp.py`` in the console from the directory of the unzipped archive
- * You should now have all the blogs converted into separate directories under the ``build`` directory
+Prerequisites
+=============
+ * `virtualenv <https://pypi.python.org/pypi/virtualenv>`_
 
 Runtime dependencies
 ====================
@@ -24,7 +18,19 @@ Runtime dependencies
  * `html2text <http://www.aaronsw.com/2002/html2text/>`_ :  converts HTML to markdown (python)
  * `PyYAML <http://pyyaml.org/wiki/PyYAML>`_ : Reading configuration files and writing YAML headers (python)
  * `Beautiful soup <http://www.crummy.com/software/BeautifulSoup/>`_ : Parsing and downloading of post images/attachments (python)
-
+ 
+Getting started
+===============
+ 1. `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone https://github.com/thomasf/exitwp``
+ 2. Create a virtual environment in the exitwp directory using ``virtualenv venv``
+ 3. Activate your virtual environment using ``./venv/Scripts/activate``
+ 4. Install the python packages defined in the requirements file using ``pip install -r pip_requirements.txt``
+ 5. Export one or more wordpress blogs using the wordpress exporter under tools/export in wordpress admin.
+ 6. Put all wordpress xml files in the ``wordpress-xml`` directory
+ 7. Special note for Wordpress 3.1, you need to add a missing namespace in rss tag : ``xmlns:atom="http://www.w3.org/2005/Atom"``
+ 8. Run xmllint on your export file and fix errors if there are.
+ 9. Run the converter by typing ``python exitwp.py`` in the console from the directory of the unzipped archive
+ 10. You should now have all the blogs converted into separate directories under the ``build`` directory
 
 Installing dependencies in ubuntu/debian
 ----------------------------------------
