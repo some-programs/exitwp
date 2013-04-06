@@ -123,6 +123,7 @@ def parse_wp_xml(file):
 
             export_item = {
                 'title': gi('title'),
+                'author': gi('dc:creator'),
                 'date': gi('wp:post_date'),
                 'slug': gi('wp:post_name'),
                 'status': gi('wp:status'),
@@ -211,7 +212,7 @@ def write_jekyll(data, target_format):
         filename_parts.append(target_format)
         return ''.join(filename_parts)
 
-    def get_attachment_path(src, dir, dir_prefix='a'):
+    def get_attachment_path(src, dir, dir_prefix='images'):
         try:
             files = attachments[dir]
         except KeyError:
@@ -257,6 +258,7 @@ def write_jekyll(data, target_format):
         out = None
         yaml_header = {
             'title': i['title'],
+            'author': i['author'],
             'date': datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S'),
             'slug': i['slug'],
             'wordpress_id': int(i['wp_id']),
