@@ -8,7 +8,7 @@ from glob import glob
 import re
 import sys
 import yaml
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from urlparse import urlparse, urljoin
 from urllib import urlretrieve
 from html2text import html2text_file
