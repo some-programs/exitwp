@@ -29,7 +29,7 @@ Runtime dependencies
 Installing dependencies in ubuntu/debian
 ----------------------------------------
 
-   ``sudo apt-get install python-yaml python-beautifulsoup4 python-html2text``
+   ``sudo apt-get install python-yaml python-bs4 python-html2text``
 
 Installing Python dependencies using python package installer (pip)
 -------------------------------------------------------------------
