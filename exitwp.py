@@ -3,7 +3,7 @@
 from xml.etree.ElementTree import ElementTree, XMLTreeBuilder
 import os
 import codecs
-from datetime import datetime
+from datetime import datetime, tzinfo, timedelta
 from glob import glob
 import re
 import sys
@@ -34,6 +34,25 @@ item_type_filter = set(config['item_type_filter'])
 item_field_filter = config['item_field_filter']
 date_fmt = config['date_format']
 body_replace = config['body_replace']
+
+
+# Time definitions
+ZERO = timedelta(0)
+HOUR = timedelta(hours=1)
+
+
+# UTC support
+class UTC(tzinfo):
+    """UTC"""
+
+    def utcoffset(self, dt):
+        return ZERO
+
+    def tzname(self, dt):
+        return "UTC"
+
+    def dst(self, dt):
+        return ZERO
 
 
 class ns_tracker_tree_builder(XMLTreeBuilder):
@@ -124,7 +143,7 @@ def parse_wp_xml(file):
             export_item = {
                 'title': gi('title'),
                 'author': gi('dc:creator'),
-                'date': gi('wp:post_date'),
+                'date': gi('wp:post_date_gmt'),
                 'slug': gi('wp:post_name'),
                 'status': gi('wp:status'),
                 'type': gi('wp:post_type'),
@@ -259,7 +278,7 @@ def write_jekyll(data, target_format):
         yaml_header = {
             'title': i['title'],
             'author': i['author'],
-            'date': datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S'),
+            'date': datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC()),
             'slug': i['slug'],
             'wordpress_id': int(i['wp_id']),
             'comments': i['comments'],
