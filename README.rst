@@ -49,12 +49,12 @@ In the event your local system is incompatible with the dependencies listed (or 
 
 1. Lint and place all wordpress xml files in the ``wordpress-xml`` directory as mentioned above
 2. In the directory of the unzipped archive, run ``vagrant up``.
-3. Ssh to your Vagrant VM using ``vagrant ssh``
+3. SSH to your Vagrant VM using ``vagrant ssh``
 4. Run ``cd /vagrant`` to open the VM's shared folder
 5. Run the converter from the VM by typing ``python exitwp.py``
-6. After the converter completes, exit the ssh session using ``exit``
+6. After the converter completes, exit the SSH session using ``exit``
 7. You should now have all the blogs converted into separate directories under the ``build`` directory
-8. **Important:** Once satisfied with the results, run `vagrant destroy -f` to shut down the VM and remove the virtual drive from your local machine
+8. **Important:** Once satisfied with the results, run ``vagrant destroy -f`` to shut down the VM and remove the virtual drive from your local machine
 
 Configuration/Customization
 ===========================
