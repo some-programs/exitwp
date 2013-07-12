@@ -7,3 +7,4 @@ bin/
 build/
 include/
 .vagrant/
+.DS_Store

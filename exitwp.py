@@ -117,7 +117,7 @@ def parse_wp_xml(file):
                     tag = q
                 try:
                     result = i.find(ns[namespace] + tag).text
-                    print result
+                    print result.encode('utf-8')
                 except AttributeError:
                     result = "No Content Found"
                 if unicode_wrap:
