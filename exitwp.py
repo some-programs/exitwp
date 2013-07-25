@@ -103,7 +103,10 @@ def parse_wp_xml(file):
                     continue
                 t_domain = unicode(tax.attrib['domain'])
                 t_entry = unicode(tax.text)
-                if (not (t_domain in taxonomy_filter) and not (t_domain in taxonomy_entry_filter and taxonomy_entry_filter[t_domain] == t_entry)):
+                if (not (t_domain in taxonomy_filter)
+                    and not (t_domain
+                             in taxonomy_entry_filter
+                             and taxonomy_entry_filter[t_domain] == t_entry)):
                     if not t_domain in export_taxanomies:
                         export_taxanomies[t_domain] = []
                     export_taxanomies[t_domain].append(t_entry)
@@ -240,7 +243,8 @@ def write_jekyll(data, target_format):
         try:
             filename = files[src]
         except KeyError:
-            file_root, file_ext = os.path.splitext(os.path.basename(urlparse(src)[2]))
+            file_root, file_ext = os.path.splitext(os.path.basename(
+                urlparse(src)[2]))
             file_infix = 1
             if file_root == '':
                 file_root = '1'
@@ -278,7 +282,8 @@ def write_jekyll(data, target_format):
         yaml_header = {
             'title': i['title'],
             'author': i['author'],
-            'date': datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC()),
+            'date': datetime.strptime(
+                i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC()),
             'slug': i['slug'],
             'wordpress_id': int(i['wp_id']),
             'comments': i['comments'],
@@ -297,7 +302,8 @@ def write_jekyll(data, target_format):
             parentpath = ''
             item = i
             while item['parent'] != "0":
-                item = next((parent for parent in data['items'] if parent['wp_id'] == item['parent']), None)
+                item = next((parent for parent in data['items']
+                             if parent['wp_id'] == item['parent']), None)
                 if item:
                     parentpath = get_item_uid(item) + "/" + parentpath
                 else:
@@ -317,11 +323,13 @@ def write_jekyll(data, target_format):
                                         img.encode('utf-8')),
                                 get_attachment_path(img, i['uid']))
                 except:
-                    print "\n unable to download " + urljoin(data['header']['link'], img.encode('utf-8'))
+                    print "\n unable to download " + urljoin(
+                        data['header']['link'], img.encode('utf-8'))
 
         if out is not None:
             def toyaml(data):
-                return yaml.safe_dump(data, allow_unicode=True, default_flow_style=False).decode('utf-8')
+                return yaml.safe_dump(data, allow_unicode=True,
+                                      default_flow_style=False).decode('utf-8')
 
             tax_out = {}
             for taxonomy in i['taxanomies']:
