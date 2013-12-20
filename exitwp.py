@@ -143,6 +143,8 @@ def parse_wp_xml(file):
                     print "could not parse html: " + body
             #print img_srcs
 
+            excerpt = gi('excerpt:encoded')
+
             export_item = {
                 'title': gi('title'),
                 'author': gi('dc:creator'),
@@ -155,6 +157,7 @@ def parse_wp_xml(file):
                 'comments': gi('wp:comment_status') == u'open',
                 'taxanomies': export_taxanomies,
                 'body': body,
+                'excerpt': excerpt,
                 'img_srcs': img_srcs
             }
 
@@ -284,6 +287,7 @@ def write_jekyll(data, target_format):
             'author': i['author'],
             'date': datetime.strptime(
                 i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC()),
+            'excerpt': i['excerpt'],
             'slug': i['slug'],
             'wordpress_id': int(i['wp_id']),
             'comments': i['comments'],
