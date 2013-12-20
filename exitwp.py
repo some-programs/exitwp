@@ -111,7 +111,7 @@ def parse_wp_xml(file):
                         export_taxanomies[t_domain] = []
                     export_taxanomies[t_domain].append(t_entry)
 
-            def gi(q, unicode_wrap=True):
+            def gi(q, unicode_wrap=True, empty=False):
                 namespace = ''
                 tag = ''
                 if q.find(':') > 0:
@@ -123,6 +123,8 @@ def parse_wp_xml(file):
                     print result.encode('utf-8')
                 except AttributeError:
                     result = "No Content Found"
+                    if empty:
+                        result = ""
                 if unicode_wrap:
                     result = unicode(result)
                 return result
@@ -143,6 +145,8 @@ def parse_wp_xml(file):
                     print "could not parse html: " + body
             #print img_srcs
 
+            excerpt = gi('excerpt:encoded', empty=True)
+
             export_item = {
                 'title': gi('title'),
                 'author': gi('dc:creator'),
@@ -155,6 +159,7 @@ def parse_wp_xml(file):
                 'comments': gi('wp:comment_status') == u'open',
                 'taxanomies': export_taxanomies,
                 'body': body,
+                'excerpt': excerpt,
                 'img_srcs': img_srcs
             }
 
@@ -288,6 +293,8 @@ def write_jekyll(data, target_format):
             'wordpress_id': int(i['wp_id']),
             'comments': i['comments'],
         }
+        if len(i['excerpt']) > 0:
+            yaml_header['excerpt'] = i['excerpt']
         if i['status'] != u'publish':
             yaml_header['published'] = False
 
