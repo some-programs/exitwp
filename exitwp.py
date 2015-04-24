@@ -43,6 +43,7 @@ HOUR = timedelta(hours=1)
 
 # UTC support
 class UTC(tzinfo):
+
     """UTC"""
 
     def utcoffset(self, dt):
@@ -56,6 +57,7 @@ class UTC(tzinfo):
 
 
 class ns_tracker_tree_builder(XMLTreeBuilder):
+
     def __init__(self):
         XMLTreeBuilder.__init__(self)
         self._parser.StartNamespaceDeclHandler = self._start_ns
