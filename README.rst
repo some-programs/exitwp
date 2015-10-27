@@ -25,6 +25,24 @@ Runtime dependencies
  * `PyYAML <http://pyyaml.org/wiki/PyYAML>`_ : Reading configuration files and writing YAML headers (python)
  * `Beautiful soup <http://www.crummy.com/software/BeautifulSoup/>`_ : Parsing and downloading of post images/attachments (python)
 
+Running with Docker
+-------------------
+
+In the event your local system is incompatible with the dependencies listed (or you'd rather not install them), you can use the included `Dockerfile` to build an image with all necessary dependencies installed.
+
+Copy your wordpress XML to the `wordpress-xml` directory, then build the docker image:
+
+    ``docker build -t exitwp .``
+
+Building the image runs `exitwp.py` for you and puts the results in the `/usr/src/app/build` directory inside the image.
+
+There are a number of ways to extract the output files from the image. An easy way is:
+
+    ``docker run --name exitwp exitwp | tar -xf - && docker stop exitwp && docker rm exitwp``
+
+That runs the image's default command which simply tars up the `build` dir to stdout. The rest of the line untars all the things and cleans up the Docker container.
+
+After that command runs, your results will be in `./build` on your host.
 
 Installing dependencies in ubuntu/debian
 ----------------------------------------
