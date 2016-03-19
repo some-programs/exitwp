@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 
-from xml.etree.ElementTree import ElementTree, XMLTreeBuilder
-import os
 import codecs
-from datetime import datetime, tzinfo, timedelta
-from glob import glob
+import os
 import re
 import sys
+from datetime import datetime, timedelta, tzinfo
+from glob import glob
+from urllib import urlretrieve
+from urlparse import urljoin, urlparse
+from xml.etree.ElementTree import ElementTree, XMLTreeBuilder
+
 import yaml
 from bs4 import BeautifulSoup
-from urlparse import urlparse, urljoin
-from urllib import urlretrieve
+
 from html2text import html2text_file
 
 '''
