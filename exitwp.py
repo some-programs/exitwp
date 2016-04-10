@@ -152,6 +152,7 @@ def parse_wp_xml(file):
 
             export_item = {
                 'title': gi('title'),
+                'link': gi('link'),
                 'author': gi('dc:creator'),
                 'date': gi('wp:post_date_gmt'),
                 'slug': gi('wp:post_name'),
@@ -289,6 +290,7 @@ def write_jekyll(data, target_format):
         out = None
         yaml_header = {
             'title': i['title'],
+            'link': i['link'],
             'author': i['author'],
             'date': datetime.strptime(
                 i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC()),
