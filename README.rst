@@ -10,6 +10,9 @@ The latest version of these docs should always be available at https://github.co
 
 Getting started
 ===============
+
+To do the conversion locally:
+
  * `Download <https://github.com/thomasf/exitwp/zipball/master>`_ or clone using ``git clone https://github.com/thomasf/exitwp.git``
  * Export one or more wordpress blogs using the wordpress exporter under tools/export in wordpress admin.
  * Put all wordpress xml files in the ``wordpress-xml`` directory
@@ -17,6 +20,8 @@ Getting started
  * Run xmllint on your export file and fix errors if there are.
  * Run the converter by typing ``python exitwp.py`` in the console from the directory of the unzipped archive
  * You should now have all the blogs converted into separate directories under the ``build`` directory
+
+If you do not want to install any tools locally or run the scripts, you may try this "cloud" version: https://github.com/yihui/travis-exitwp (all you need to do is upload the XML file).
 
 Runtime dependencies
 ====================
