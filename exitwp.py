@@ -176,6 +176,11 @@ def parse_wp_xml(file):
         'items': parse_items(),
     }
 
+def format_date(date_text,date_format):
+    try:
+        return datetime.strptime(date_text, date_format)
+    except ValueError:
+        return datetime.strptime("1900-01-01 00:00:00", date_format)
 
 def write_jekyll(data, target_format):
 
@@ -292,8 +297,7 @@ def write_jekyll(data, target_format):
             'title': i['title'],
             'link': i['link'],
             'author': i['author'],
-            'date': datetime.strptime(
-                i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC()),
+            'date': format_date(i['date'], '%Y-%m-%d %H:%M:%S'),
             'slug': i['slug'],
             'wordpress_id': int(i['wp_id']),
             'comments': i['comments'],
