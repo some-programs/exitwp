@@ -226,11 +226,11 @@ def write_jekyll(data, target_format):
         filename_parts.append(target_format)
         return ''.join(filename_parts)
 
-    def get_attachment_path(src, dir, dir_prefix='images'):
+    def get_attachment_path(src, uid, dir_prefix='images'):
         try:
-            files = attachments[dir]
+            files = attachments[uid]
         except KeyError:
-            attachments[dir] = files = {}
+            attachments[uid] = files = {}
 
         try:
             filename = files[src]
@@ -247,7 +247,7 @@ def write_jekyll(data, target_format):
                 file_infix = file_infix + 1
             files[src] = filename = maybe_filename
 
-        target_dir = os.path.normpath(blog_dir + '/' + dir_prefix + '/' + dir)
+        target_dir = os.path.normpath(blog_dir + '/' + dir_prefix + '/' + uid)
         target_file = os.path.normpath(target_dir + '/' + filename)
 
         if not os.path.exists(target_dir):
