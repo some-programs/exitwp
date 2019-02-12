@@ -69,9 +69,6 @@ class ns_tracker_tree_builder(XMLTreeBuilder):
 
 
 def html2fmt(html, target_format):
-    #   html = html.replace("\n\n", '<br/><br/>')
-    #   html = html.replace('<pre lang="xml">', '<pre lang="xml"><![CDATA[')
-    #   html = html.replace('</pre>', ']]></pre>')
     if target_format == 'html':
         return html
     else:
@@ -222,7 +219,7 @@ def write_jekyll(data, target_format):
         filename_parts = [full_dir, '/']
         filename_parts.append(item['uid'])
         if item['type'] == 'page':
-            if (not os.path.exists(''.join(filename_parts))):
+            if not os.path.exists(''.join(filename_parts)):
                 os.makedirs(''.join(filename_parts))
             filename_parts.append('/index')
         filename_parts.append('.')
@@ -253,7 +250,7 @@ def write_jekyll(data, target_format):
         target_dir = os.path.normpath(blog_dir + '/' + dir_prefix + '/' + dir)
         target_file = os.path.normpath(target_dir + '/' + filename)
 
-        if (not os.path.exists(target_dir)):
+        if not os.path.exists(target_dir):
             os.makedirs(target_dir)
 
         return target_file
@@ -262,11 +259,11 @@ def write_jekyll(data, target_format):
         skip_item = False
 
         for field, value in item_field_filter.iteritems():
-            if(i[field] == value):
+            if i[field] == value:
                 skip_item = True
                 break
 
-        if(skip_item):
+        if skip_item:
             continue
 
         sys.stdout.write('.')
