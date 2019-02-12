@@ -116,7 +116,6 @@ def parse_wp_xml(file):
 
             def gi(q, unicode_wrap=True, empty=False):
                 namespace = ''
-                tag = ''
                 if q.find(':') > 0:
                     namespace, tag = q.split(':', 1)
                 else:
@@ -190,7 +189,6 @@ def write_jekyll(data, target_format):
         return f
 
     def get_item_uid(item, date_prefix=False, namespace=''):
-        result = None
         if namespace not in item_uids:
             item_uids[namespace] = {}
 
