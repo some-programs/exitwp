@@ -137,16 +137,6 @@ def parse_wp_xml(file):
                 # body = body.replace(key, body_replace[key])
                 body = re.sub(key, body_replace[key], body)
 
-            img_srcs = []
-            if body is not None:
-                try:
-                    soup = BeautifulSoup(body)
-                    img_tags = soup.find_all('img')
-                    for img in img_tags:
-                        img_srcs.append(img['src'])
-                except:
-                    print 'could not parse html: ' + body
-
             excerpt = gi('excerpt:encoded', empty=True)
 
             export_item = {
@@ -162,8 +152,7 @@ def parse_wp_xml(file):
                 'comments': gi('wp:comment_status') == u'open',
                 'taxanomies': export_taxanomies,
                 'body': body,
-                'excerpt': excerpt,
-                'img_srcs': img_srcs
+                'excerpt': excerpt
             }
 
             export_items.append(export_item)
@@ -325,15 +314,20 @@ def write_jekyll(data, target_format):
         else:
             print 'Unknown item type :: ' + i['type']
 
-        if download_images:
-            for img in i['img_srcs']:
-                try:
-                    urlretrieve(urljoin(data['header']['link'],
-                                        img.encode('utf-8')),
-                                get_attachment_path(img, i['uid']))
-                except:
-                    print '\n unable to download ' + urljoin(
-                        data['header']['link'], img.encode('utf-8'))
+        if download_images and i['body'] is not None:
+            try:
+                soup = BeautifulSoup(i['body'])
+                img_tags = soup.find_all('img')
+                for img in img_tags:
+                    try:
+                        urlretrieve(urljoin(data['header']['link'],
+                                            img['src'].encode('utf-8')),
+                                    get_attachment_path(img['src'], i['uid']))
+                    except:
+                        print '\n unable to download ' + urljoin(
+                            data['header']['link'], img['src'].encode('utf-8'))
+            except:
+                print 'could not parse html: ' + i['body']
 
         if out is not None:
             def toyaml(data):
