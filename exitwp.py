@@ -146,7 +146,6 @@ def parse_wp_xml(file):
                         img_srcs.append(img['src'])
                 except:
                     print 'could not parse html: ' + body
-            # print img_srcs
 
             excerpt = gi('excerpt:encoded', empty=True)
 
@@ -270,8 +269,6 @@ def write_jekyll(data, target_format):
         if (not os.path.exists(target_dir)):
             os.makedirs(target_dir)
 
-        # if src not in attachments[dir]:
-        #     print target_name
         return target_file
 
     for i in data['items']:
