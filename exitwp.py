@@ -305,7 +305,7 @@ def write_jekyll(data, target_format):
             out = open_file(fn)
             yaml_header['layout'] = 'page'
         elif i['type'] in item_type_filter:
-            pass
+            continue
         else:
             print 'Unknown item type :: ' + i['type']
 
