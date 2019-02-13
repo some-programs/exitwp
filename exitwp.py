@@ -226,7 +226,7 @@ def write_jekyll(data, target_format):
         filename_parts.append(target_format)
         return ''.join(filename_parts)
 
-    def get_attachment_path(src, uid, target_dir):
+    def get_attachment_file_name(src, uid):
         try:
             files = attachments[uid]
         except KeyError:
@@ -247,9 +247,7 @@ def write_jekyll(data, target_format):
                 file_infix = file_infix + 1
             files[src] = filename = maybe_filename
 
-        target_file = os.path.normpath(target_dir + '/' + filename)
-
-        return target_file
+        return filename
 
     for i in data['items']:
         skip_item = False
@@ -318,13 +316,25 @@ def write_jekyll(data, target_format):
 
                 for img in img_tags:
                     try:
+
+                        attachment_file_name = \
+                            get_attachment_file_name(img['src'], i['uid'])
+                        attachment_file_path = os.path.join(target_dir, attachment_file_name)
+                        attachment_url = "/" + os.path.join(image_dir, attachment_file_name)
+
                         urlretrieve(urljoin(data['header']['link'],
                                             img['src'].encode('utf-8')),
-                                    get_attachment_path(img['src'], i['uid'],
-                                                        target_dir))
+                                    attachment_file_path)
+
+                        # Substitute image link with a path of a downloaded image
+                        img['src'] = attachment_url
+
                     except:
                         print '\n unable to download ' + urljoin(
                             data['header']['link'], img['src'].encode('utf-8'))
+
+                if img_tags:
+                    i['body'] = soup.prettify()
             except:
                 print 'could not parse html: ' + i['body']
 
