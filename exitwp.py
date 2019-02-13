@@ -226,7 +226,7 @@ def write_jekyll(data, target_format):
         filename_parts.append(target_format)
         return ''.join(filename_parts)
 
-    def get_attachment_path(src, uid, dir_prefix='images'):
+    def get_attachment_path(src, uid, target_dir):
         try:
             files = attachments[uid]
         except KeyError:
@@ -247,11 +247,7 @@ def write_jekyll(data, target_format):
                 file_infix = file_infix + 1
             files[src] = filename = maybe_filename
 
-        target_dir = os.path.normpath(blog_dir + '/' + dir_prefix + '/' + uid)
         target_file = os.path.normpath(target_dir + '/' + filename)
-
-        if not os.path.exists(target_dir):
-            os.makedirs(target_dir)
 
         return target_file
 
@@ -313,11 +309,19 @@ def write_jekyll(data, target_format):
             try:
                 soup = BeautifulSoup(i['body'])
                 img_tags = soup.find_all('img')
+
+                image_dir = os.path.join('images', i['uid'])
+                target_dir = os.path.normpath(os.path.join(blog_dir, image_dir))
+
+                if img_tags and not os.path.exists(target_dir):
+                    os.makedirs(target_dir)
+
                 for img in img_tags:
                     try:
                         urlretrieve(urljoin(data['header']['link'],
                                             img['src'].encode('utf-8')),
-                                    get_attachment_path(img['src'], i['uid']))
+                                    get_attachment_path(img['src'], i['uid'],
+                                                        target_dir))
                     except:
                         print '\n unable to download ' + urljoin(
                             data['header']['link'], img['src'].encode('utf-8'))
