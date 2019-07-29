@@ -122,7 +122,7 @@ def parse_wp_xml(file):
                 else:
                     tag = q
                 try:
-                    result = i.find(ns[namespace] + tag).text
+                    result = (i.find(ns[namespace] + tag) or i.find(tag)).text.strip()
                     print result.encode('utf-8')
                 except AttributeError:
                     result = 'No Content Found'
@@ -211,7 +211,11 @@ def write_jekyll(data, target_format):
         else:
             uid = []
             if (date_prefix):
-                dt = datetime.strptime(item['date'], date_fmt)
+                try:
+                    dt = datetime.strptime(item['date'], date_fmt)
+                except:
+                    dt = datetime.today()
+                    print 'Wrong date in', item['title']
                 uid.append(dt.strftime('%Y-%m-%d'))
                 uid.append('-')
             s_title = item['slug']
@@ -288,12 +292,16 @@ def write_jekyll(data, target_format):
         sys.stdout.write('.')
         sys.stdout.flush()
         out = None
+        try:
+            date = datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC())
+        except:
+            date = datetime.today()
+            print 'Wrong date in', item['title']
         yaml_header = {
             'title': i['title'],
             'link': i['link'],
             'author': i['author'],
-            'date': datetime.strptime(
-                i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC()),
+            'date': date,
             'slug': i['slug'],
             'wordpress_id': int(i['wp_id']),
             'comments': i['comments'],
