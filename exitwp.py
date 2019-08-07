@@ -296,7 +296,7 @@ def write_jekyll(data, target_format):
             date = datetime.strptime(i['date'], '%Y-%m-%d %H:%M:%S').replace(tzinfo=UTC())
         except:
             date = datetime.today()
-            print 'Wrong date in', item['title']
+            print 'Wrong date in', i['title']
         yaml_header = {
             'title': i['title'],
             'link': i['link'],
