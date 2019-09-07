@@ -122,7 +122,7 @@ def parse_wp_xml(file):
                 else:
                     tag = q
                 try:
-                    result = (i.find(ns[namespace] + tag) or i.find(tag)).text.strip()
+                    result = (i.find(q, ns) or i.find(tag) or i.find(ns[namespace] + tag)).text.strip()
                     print result.encode('utf-8')
                 except AttributeError:
                     result = 'No Content Found'
