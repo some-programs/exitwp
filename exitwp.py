@@ -14,6 +14,7 @@ import yaml
 from bs4 import BeautifulSoup
 
 from html2text import html2text_file
+from linebreaks_wp import linebreaks_wp
 
 '''
 exitwp - Wordpress xml exports to Jekykll blog format conversion
@@ -73,7 +74,7 @@ def html2fmt(html, target_format):
     #   html = html.replace('<pre lang="xml">', '<pre lang="xml"><![CDATA[')
     #   html = html.replace('</pre>', ']]></pre>')
     if target_format == 'html':
-        return html
+        return linebreaks_wp(html);
     else:
         return html2text_file(html, None)
 
@@ -218,7 +219,8 @@ def write_jekyll(data, target_format):
                     print 'Wrong date in', item['title']
                 uid.append(dt.strftime('%Y-%m-%d'))
                 uid.append('-')
-            s_title = item['slug']
+            #s_title = item['slug']
+            s_title = item['wp_id']
             if s_title is None or s_title == '':
                 s_title = item['title']
             if s_title is None or s_title == '':

@@ -5,7 +5,7 @@ wp_exports: wordpress-xml
 build_dir: build
 
 # Output format: primary choices are html or markdown.
-target_format: markdown
+target_format: html
 
 # The date format of the wikipedia export file.
 # I'm not sure if this ever differs depending on wordpress localization.
