@@ -130,7 +130,7 @@ def parse_wp_xml(file):
                         result = ''
                 if unicode_wrap:
                     result = unicode(result)
-                return result
+                return result.strip()
 
             body = gi('content:encoded')
             for key in body_replace:
