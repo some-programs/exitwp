@@ -38,6 +38,10 @@ From the checked out root for this project, type:
 
    ``sudo pip install --upgrade  -r pip_requirements.txt``
 
+Or for Windows, type:
+
+   ``python -m pip install --upgrade -r pip_requirements.txt``
+
 Note that PyYAML will require other packages to compile correctly under ubuntu/debian, these are installed by typing:
 
    ``sudo apt-get install libyaml-dev python-dev build-essential``
