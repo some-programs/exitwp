@@ -1,0 +1,6 @@
+app:
+    build: .
+    command: /exitwp/exitwp.py
+    volumes: 
+     - ./wordpress-xml:/exitwp/wordpress-xml
+     - ./build:/exitwp/build
