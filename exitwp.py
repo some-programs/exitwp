@@ -69,9 +69,6 @@ class ns_tracker_tree_builder(XMLTreeBuilder):
 
 
 def html2fmt(html, target_format):
-    #   html = html.replace("\n\n", '<br/><br/>')
-    #   html = html.replace('<pre lang="xml">', '<pre lang="xml"><![CDATA[')
-    #   html = html.replace('</pre>', ']]></pre>')
     if target_format == 'html':
         return html
     else:
@@ -116,7 +113,6 @@ def parse_wp_xml(file):
 
             def gi(q, unicode_wrap=True, empty=False):
                 namespace = ''
-                tag = ''
                 if q.find(':') > 0:
                     namespace, tag = q.split(':', 1)
                 else:
@@ -137,17 +133,6 @@ def parse_wp_xml(file):
                 # body = body.replace(key, body_replace[key])
                 body = re.sub(key, body_replace[key], body)
 
-            img_srcs = []
-            if body is not None:
-                try:
-                    soup = BeautifulSoup(body)
-                    img_tags = soup.find_all('img')
-                    for img in img_tags:
-                        img_srcs.append(img['src'])
-                except:
-                    print 'could not parse html: ' + body
-            # print img_srcs
-
             excerpt = gi('excerpt:encoded', empty=True)
 
             export_item = {
@@ -163,8 +148,7 @@ def parse_wp_xml(file):
                 'comments': gi('wp:comment_status') == u'open',
                 'taxanomies': export_taxanomies,
                 'body': body,
-                'excerpt': excerpt,
-                'img_srcs': img_srcs
+                'excerpt': excerpt
             }
 
             export_items.append(export_item)
@@ -202,7 +186,6 @@ def write_jekyll(data, target_format):
         return f
 
     def get_item_uid(item, date_prefix=False, namespace=''):
-        result = None
         if namespace not in item_uids:
             item_uids[namespace] = {}
 
@@ -240,18 +223,18 @@ def write_jekyll(data, target_format):
         filename_parts = [full_dir, '/']
         filename_parts.append(item['uid'])
         if item['type'] == 'page':
-            if (not os.path.exists(''.join(filename_parts))):
+            if not os.path.exists(''.join(filename_parts)):
                 os.makedirs(''.join(filename_parts))
             filename_parts.append('/index')
         filename_parts.append('.')
         filename_parts.append(target_format)
         return ''.join(filename_parts)
 
-    def get_attachment_path(src, dir, dir_prefix='images'):
+    def get_attachment_file_name(src, uid):
         try:
-            files = attachments[dir]
+            files = attachments[uid]
         except KeyError:
-            attachments[dir] = files = {}
+            attachments[uid] = files = {}
 
         try:
             filename = files[src]
@@ -268,25 +251,17 @@ def write_jekyll(data, target_format):
                 file_infix = file_infix + 1
             files[src] = filename = maybe_filename
 
-        target_dir = os.path.normpath(blog_dir + '/' + dir_prefix + '/' + dir)
-        target_file = os.path.normpath(target_dir + '/' + filename)
-
-        if (not os.path.exists(target_dir)):
-            os.makedirs(target_dir)
-
-        # if src not in attachments[dir]:
-        #     print target_name
-        return target_file
+        return filename
 
     for i in data['items']:
         skip_item = False
 
         for field, value in item_field_filter.iteritems():
-            if(i[field] == value):
+            if i[field] == value:
                 skip_item = True
                 break
 
-        if(skip_item):
+        if skip_item:
             continue
 
         sys.stdout.write('.')
@@ -332,19 +307,44 @@ def write_jekyll(data, target_format):
             out = open_file(fn)
             yaml_header['layout'] = 'page'
         elif i['type'] in item_type_filter:
-            pass
+            continue
         else:
             print 'Unknown item type :: ' + i['type']
 
-        if download_images:
-            for img in i['img_srcs']:
-                try:
-                    urlretrieve(urljoin(data['header']['link'],
-                                        img.encode('utf-8')),
-                                get_attachment_path(img, i['uid']))
-                except:
-                    print '\n unable to download ' + urljoin(
-                        data['header']['link'], img.encode('utf-8'))
+        if download_images and i['body'] is not None:
+            try:
+                soup = BeautifulSoup(i['body'])
+                img_tags = soup.find_all('img')
+
+                image_dir = os.path.join('images', i['uid'])
+                target_dir = os.path.normpath(os.path.join(blog_dir, image_dir))
+
+                if img_tags and not os.path.exists(target_dir):
+                    os.makedirs(target_dir)
+
+                for img in img_tags:
+                    try:
+
+                        attachment_file_name = \
+                            get_attachment_file_name(img['src'], i['uid'])
+                        attachment_file_path = os.path.join(target_dir, attachment_file_name)
+                        attachment_url = "/" + os.path.join(image_dir, attachment_file_name)
+
+                        urlretrieve(urljoin(data['header']['link'],
+                                            img['src'].encode('utf-8')),
+                                    attachment_file_path)
+
+                        # Substitute image link with a path of a downloaded image
+                        img['src'] = attachment_url
+
+                    except:
+                        print '\n unable to download ' + urljoin(
+                            data['header']['link'], img['src'].encode('utf-8'))
+
+                if img_tags:
+                    i['body'] = soup.prettify()
+            except:
+                print 'could not parse html: ' + i['body']
 
         if out is not None:
             def toyaml(data):

@@ -66,7 +66,6 @@ Some things like custom handling of non standard post types is not fully configu
 Known issues
 ============
  * Target file names are some times less than optimal.
- * Rewriting of image/attachment links if they are downloaded would be a good feature
  * There will probably be issues when migrating non utf-8 encoded wordpress dump files (if they exist).
 
 Other Tools
